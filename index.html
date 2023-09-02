@@ -1,706 +1,216 @@
-
-<!DOCTYPE HTML>
-<html lang="en-US">
-<head>
-
-    <title> </title>
-
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="referrer" content="no-referrer-when-downgrade">
-    <!-- THIS SCRIPT NEEDS TO BE LOADED FIRST BEFORE wforms.js -->
-    <script type="text/javascript" data-for="FA__DOMContentLoadedEventDispatch" src="https://constantcontact.tfaforms.net/js/FA__DOMContentLoadedEventDispatcher.js" defer></script>
-                        <style>
-                    .captcha {
-                        padding-bottom: 1em !important;
-                    }
-                    .wForm .captcha .oneField {
-                        margin: 0;
-                        padding: 0;
-                    }
-                </style>
-                <script type="text/javascript">
-                    // initialize our variables
-                    var captchaReady = 0;
-                    var wFORMSReady = 0;
-                    var isConditionalSubmitEnabled = false;
-
-                    // when wForms is loaded call this
-                    var wformsReadyCallback = function () {
-                        // using this var to denote if wForms is loaded
-                        wFORMSReady = 1;
-                        isConditionalSubmitEnabled = document.getElementById('submit_button').hasAttribute('data-condition');
-                        // call our recaptcha function which is dependent on both
-                        // wForms and an async call to google
-                        // note the meat of this function wont fire until both
-                        // wFORMSReady = 1 and captchaReady = 1
-                        onloadCallback();
-                    }
-                    var gCaptchaReadyCallback = function() {
-                        // using this var to denote if captcha is loaded
-                        captchaReady = 1;
-                        isConditionalSubmitEnabled = document.getElementById('submit_button').hasAttribute('data-condition');
-                        // call our recaptcha function which is dependent on both
-                        // wForms and an async call to google
-                        // note the meat of this function wont fire until both
-                        // wFORMSReady = 1 and captchaReady = 1
-                        onloadCallback();
-                    };
-
-                    // add event listener to fire when wForms is fully loaded
-                    document.addEventListener("wFORMSLoaded", wformsReadyCallback);
-
-                    var enableSubmitButton = function() {
-                        var submitButton = document.getElementById('submit_button');
-                        var explanation = document.getElementById('disabled-explanation');
-                        var isConditionalSubmitConditionMet = wFORMS.behaviors.condition.isConditionalSubmitConditionMet;
-                        if (
-                            submitButton != null &&
-                            (isConditionalSubmitEnabled && isConditionalSubmitConditionMet) ||
-                            !isConditionalSubmitEnabled
-                        )
-                        {
-                            submitButton.removeAttribute('disabled');
-                            if (explanation != null) {
-                                explanation.style.display = 'none';
-                            }
-                        }
-                    };
-                    var disableSubmitButton = function() {
-                        var submitButton = document.getElementById('submit_button');
-                        var explanation = document.getElementById('disabled-explanation');
-                        if (submitButton != null) {
-                            submitButton.disabled = true;
-                            if (explanation != null) {
-                                explanation.style.display = 'block';
-                            }
-                        }
-                    };
-
-                    // call this on both captcha async complete and wforms fully
-                    // initialized since we can't be sure which will complete first
-                    // and we need both done for this to function just check that they are
-                    // done to fire the functionality
-                    var onloadCallback = function () {
-                        // if our captcha is ready (async call completed)
-                        // and wFORMS is completely loaded then we are ready to add
-                        // the captcha to the page
-                        if (captchaReady && wFORMSReady) {
-                                                            grecaptcha.enterprise.render('g-recaptcha-render-div', {
-                                                            'sitekey': '6LfMg_EaAAAAAMhDNLMlgqDChzmtYHlx1yU2y7GI',
-                                'theme': 'light',
-                                'size': 'normal',
-                                'callback': 'enableSubmitButton',
-                                'expired-callback': 'disableSubmitButton'
-                            })
-                            var oldRecaptchaCheck = parseInt('1');
-                            if (oldRecaptchaCheck === -1) {
-                                var standardCaptcha = document.getElementById("tfa_captcha_text");
-                                standardCaptcha = standardCaptcha.parentNode.parentNode.parentNode;
-                                standardCaptcha.parentNode.removeChild(standardCaptcha);
-                            }
-
-                            if (!wFORMS.instances['paging']) {
-                                document.getElementById("g-recaptcha-render-div").parentNode.parentNode.parentNode.style.display = "block";
-                                //document.getElementById("g-recaptcha-render-div").parentNode.parentNode.parentNode.removeAttribute("hidden");
-                            }
-                            document.getElementById("g-recaptcha-render-div").getAttributeNode('id').value = 'tfa_captcha_text';
-
-                            var captchaError = '';
-                            if (captchaError == '1') {
-                                var errMsgText = 'The CAPTCHA was not completed successfully.';
-                                var errMsgDiv = document.createElement('div');
-                                errMsgDiv.id = "tfa_captcha_text-E";
-                                errMsgDiv.className = "err errMsg";
-                                errMsgDiv.innerText = errMsgText;
-                                var loc = document.querySelector('.g-captcha-error');
-                                loc.insertBefore(errMsgDiv, loc.childNodes[0]);
-
-                                /* See wFORMS.behaviors.paging.applyTo for origin of this code */
-                                if (wFORMS.instances['paging']) {
-                                    var b = wFORMS.instances['paging'][0];
-                                    var pp = base2.DOM.Element.querySelector(document, wFORMS.behaviors.paging.CAPTCHA_ERROR);
-                                    if (pp) {
-                                        var lastPage = 1;
-                                        for (var i = 1; i < 100; i++) {
-                                            if (b.behavior.isLastPageIndex(i)) {
-                                                lastPage = i;
-                                                break;
-                                            }
-                                        }
-                                        b.jumpTo(lastPage);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                </script>
-                                                    <script src='https://www.google.com/recaptcha/enterprise.js?onload=gCaptchaReadyCallback&render=explicit&hl=en_US' async
-                        defer></script>
-                                <script type="text/javascript">
-                    document.addEventListener("DOMContentLoaded", function() {
-                        var warning = document.getElementById("javascript-warning");
-                        if (warning != null) {
-                            warning.parentNode.removeChild(warning);
-                        }
-                        var oldRecaptchaCheck = parseInt('1');
-                        if (oldRecaptchaCheck !== -1) {
-                            var explanation = document.getElementById('disabled-explanation');
-                            var submitButton = document.getElementById('submit_button');
-                            if (submitButton != null) {
-                                submitButton.disabled = true;
-                                if (explanation != null) {
-                                    explanation.style.display = 'block';
-                                }
-                            }
-                        }
-                    });
-                </script>
-                <script type="text/javascript">
-        document.addEventListener("FA__DOMContentLoaded", function(){
-            const FORM_TIME_START = Math.floor((new Date).getTime()/1000);
-            let formElement = document.getElementById("tfa_0");
-            if (null === formElement) {
-                formElement = document.getElementById("0");
-            }
-            let appendJsTimerElement = function(){
-                let formTimeDiff = Math.floor((new Date).getTime()/1000) - FORM_TIME_START;
-                let cumulatedTimeElement = document.getElementById("tfa_dbCumulatedTime");
-                if (null !== cumulatedTimeElement) {
-                    let cumulatedTime = parseInt(cumulatedTimeElement.value);
-                    if (null !== cumulatedTime && cumulatedTime > 0) {
-                        formTimeDiff += cumulatedTime;
-                    }
-                }
-                let jsTimeInput = document.createElement("input");
-                jsTimeInput.setAttribute("type", "hidden");
-                jsTimeInput.setAttribute("value", formTimeDiff.toString());
-                jsTimeInput.setAttribute("name", "tfa_dbElapsedJsTime");
-                jsTimeInput.setAttribute("id", "tfa_dbElapsedJsTime");
-                jsTimeInput.setAttribute("autocomplete", "off");
-                if (null !== formElement) {
-                    formElement.appendChild(jsTimeInput);
-                }
-            };
-            if (null !== formElement) {
-                if(formElement.addEventListener){
-                    formElement.addEventListener('submit', appendJsTimerElement, false);
-                } else if(formElement.attachEvent){
-                    formElement.attachEvent('onsubmit', appendJsTimerElement);
-                }
-            }
-        });
-    </script>
-
-    <link href="https://constantcontact.tfaforms.net/dist/form-builder/5.0.0/wforms-layout.css?v=8f318311418369bb3a7d30238af6504e8bb8f3b3" rel="stylesheet" type="text/css" />
-
-    <link href="https://constantcontact.tfaforms.net/uploads/themes/theme-131.css" rel="stylesheet" type="text/css" />
-    <link href="https://constantcontact.tfaforms.net/dist/form-builder/5.0.0/wforms-jsonly.css?v=8f318311418369bb3a7d30238af6504e8bb8f3b3" rel="alternate stylesheet" title="This stylesheet activated by javascript" type="text/css" />
-    <script type="text/javascript" src="https://constantcontact.tfaforms.net/wForms/3.11/js/wforms.js?v=8f318311418369bb3a7d30238af6504e8bb8f3b3"></script>
-    <script type="text/javascript">
-        if(wFORMS.behaviors.prefill) wFORMS.behaviors.prefill.skip = true;
-    </script>
-    <link rel="stylesheet" type="text/css" href="https://constantcontact.tfaforms.net/css/kalendae.css" />
-	<script type="text/javascript" src="https://constantcontact.tfaforms.net/js/kalendae/kalendae.standalone.min.js" ></script>
-	<script type="text/javascript" src="https://constantcontact.tfaforms.net/wForms/3.11/js/wforms_calendar.js"></script>
-    <script type="text/javascript" src="https://constantcontact.tfaforms.net/wForms/3.11/js/localization-en_US.js?v=8f318311418369bb3a7d30238af6504e8bb8f3b3"></script>
-
-            
-    
-    </head>
-<body class="default wFormWebPage" >
-
-
-    <div id="tfaContent">
-        <div class="wFormContainer" style="max-width: 800px; width:auto;">
-    <div class="wFormHeader"></div>
-    <style type="text/css">
-                #tfa_29,
-                *[id^="tfa_29["] {
-                    width: 339px !important;
-                }
-                #tfa_29-D,
-                *[id^="tfa_29["][class~="field-container-D"] {
-                    width: auto !important;
-                }
-            
-                #tfa_29-L,
-                label[id^="tfa_29["] {
-                    width: 150px !important;
-                    min-width: 0px;
-                }
-            
-                #tfa_468,
-                *[id^="tfa_468["] {
-                    width: 320px !important;
-                }
-                #tfa_468-D,
-                *[id^="tfa_468["][class~="field-container-D"] {
-                    width: auto !important;
-                }
-            
-                #tfa_468-L,
-                label[id^="tfa_468["] {
-                    width: 120px !important;
-                    min-width: 0px;
-                }
-            
-                #tfa_472,
-                *[id^="tfa_472["] {
-                    width: 339px !important;
-                }
-                #tfa_472-D,
-                *[id^="tfa_472["][class~="field-container-D"] {
-                    width: auto !important;
-                }
-            
-                #tfa_472-L,
-                label[id^="tfa_472["] {
-                    width: 120px !important;
-                    min-width: 0px;
-                }
-            
-                #tfa_289,
-                *[id^="tfa_289["] {
-                    width: 320px !important;
-                }
-                #tfa_289-D,
-                *[id^="tfa_289["][class~="field-container-D"] {
-                    width: auto !important;
-                }
-            
-                #tfa_289-L,
-                label[id^="tfa_289["] {
-                    width: 190px !important;
-                    min-width: 0px;
-                }
-            
-                #tfa_291,
-                *[id^="tfa_291["] {
-                    width: 339px !important;
-                }
-                #tfa_291-D,
-                *[id^="tfa_291["][class~="field-container-D"] {
-                    width: auto !important;
-                }
-            
-                #tfa_291-L,
-                label[id^="tfa_291["] {
-                    width: 160px !important;
-                    min-width: 0px;
-                }
-            
-                #tfa_455,
-                *[id^="tfa_455["] {
-                    width: 320px !important;
-                }
-                #tfa_455-D,
-                *[id^="tfa_455["][class~="field-container-D"] {
-                    width: auto !important;
-                }
-            
-                #tfa_455-L,
-                label[id^="tfa_455["] {
-                    width: 160px !important;
-                    min-width: 0px;
-                }
-            
-                #tfa_453,
-                *[id^="tfa_453["] {
-                    width: 339px !important;
-                }
-                #tfa_453-D,
-                *[id^="tfa_453["][class~="field-container-D"] {
-                    width: auto !important;
-                }
-            
-                #tfa_453-L,
-                label[id^="tfa_453["] {
-                    width: 220px !important;
-                    min-width: 0px;
-                }
-            
-                #tfa_497,
-                *[id^="tfa_497["] {
-                    width: 320px !important;
-                }
-                #tfa_497-D,
-                *[id^="tfa_497["][class~="field-container-D"] {
-                    width: auto !important;
-                }
-            
-                #tfa_497-L,
-                label[id^="tfa_497["] {
-                    width: 220px !important;
-                    min-width: 0px;
-                }
-            
-                #tfa_495,
-                *[id^="tfa_495["] {
-                    width: 339px !important;
-                }
-                #tfa_495-D,
-                *[id^="tfa_495["][class~="field-container-D"] {
-                    width: auto !important;
-                }
-            
-                #tfa_495-L,
-                label[id^="tfa_495["] {
-                    width: 180px !important;
-                    min-width: 0px;
-                }
-            
-                #tfa_500,
-                *[id^="tfa_500["] {
-                    width: 320px !important;
-                }
-                #tfa_500-D,
-                *[id^="tfa_500["][class~="field-container-D"] {
-                    width: auto !important;
-                }
-            
-                #tfa_500-L,
-                label[id^="tfa_500["] {
-                    width: 90px !important;
-                    min-width: 0px;
-                }
-            
-                #tfa_510,
-                *[id^="tfa_510["] {
-                    width: 679px !important;
-                }
-                #tfa_510-D,
-                *[id^="tfa_510["][class~="field-container-D"] {
-                    width: auto !important;
-                }
-            
-                #tfa_456,
-                *[id^="tfa_456["] {
-                    width: 339px !important;
-                }
-                #tfa_456-D,
-                *[id^="tfa_456["][class~="field-container-D"] {
-                    width: auto !important;
-                }
-            
-                #tfa_456-L,
-                label[id^="tfa_456["] {
-                    width: 299px !important;
-                    min-width: 0px;
-                }
-            
-                #tfa_458,
-                *[id^="tfa_458["] {
-                    width: 320px !important;
-                }
-                #tfa_458-D,
-                *[id^="tfa_458["][class~="field-container-D"] {
-                    width: auto !important;
-                }
-            
-                #tfa_458-L,
-                label[id^="tfa_458["] {
-                    width: 259px !important;
-                    min-width: 0px;
-                }
-            
-                #tfa_516,
-                *[id^="tfa_516["] {
-                    width: 339px !important;
-                }
-                #tfa_516-D,
-                *[id^="tfa_516["][class~="field-container-D"] {
-                    width: auto !important;
-                }
-            
-                #tfa_460,
-                *[id^="tfa_460["] {
-                    width: 320px !important;
-                }
-                #tfa_460-D,
-                *[id^="tfa_460["][class~="field-container-D"] {
-                    width: auto !important;
-                }
-            
-                #tfa_460-L,
-                label[id^="tfa_460["] {
-                    width: 320px !important;
-                    min-width: 0px;
-                }
-            
-                #tfa_466,
-                *[id^="tfa_466["] {
-                    width: 260.4px !important;
-                }
-                #tfa_466-D,
-                *[id^="tfa_466["][class~="field-container-D"] {
-                    width: auto !important;
-                }
-            
-                #tfa_466-L,
-                label[id^="tfa_466["] {
-                    width: 339px !important;
-                    min-width: 0px;
-                }
-            
-                #tfa_502,
-                *[id^="tfa_502["] {
-                    width: 220.4px !important;
-                }
-                #tfa_502-D,
-                *[id^="tfa_502["][class~="field-container-D"] {
-                    width: auto !important;
-                }
-            
-                #tfa_502-L,
-                label[id^="tfa_502["] {
-                    width: 680px !important;
-                    min-width: 0px;
-                }
-            
-                #tfa_502,
-                *[id^="tfa_502["] {
-                    height: 90.4px !important
-                }
-                #tfa_502-D,
-                *[id^="tfa_502["][class~="field-container-D"] {
-                    height: auto !important;
-                }
-                #tfa_502-L,
-                label[id^="tfa_502["],
-                *[id^="tfa_502["][id$="-L"] {
-                    height: auto !important;
-                }
-            </style><div class=""><div class="wForm" id="288-WRPR" dir="ltr">
-<div class="codesection" id="code-288"><style>
-.wForm .wfPagingButtons, .wForm .actions { font size: 50. em; width: 100% !important; text-align: center; text-size: 2.0em;
-  }  
-.TopBar {
-    padding: 15px 15px 15px 15px ;
-    position:fixed;
-    top:0px;
-    left:0px;
-    width:100%;important!;
-    text-align:cen
-    margin:10px !imter;
-    z-index:4;
-}
-.TopBarInner {
-    width:100%;
-    height: 75px;
-    padding: 0px 40px !important;
-    display:inline-block;
-    text-align:left;
-    background: #1856eb
-}
-/*Footer*/
-.BottomBar {
-    padding: 15px 15px 15px 15px !important;
-    background-color:#0B1450;
-    position:fixed;
-    height: 2vh;
-    bottom:0px;
-    z-index:4;
-    color:#AFB5BB;
-    width:100%;
-    margin:0px !important;
-    left:0px;
-    font-size:15px;
-    font-family: $font-main-font;
-}
-</style>
-<div align="left" class="TopBar">
-  <div class="TopBarInner"><a href="https://www.constantcontact.com"><img class="Logo" src="https://images.ctfassets.net/t21gix3kzulv/391zRXYpuZ902MDK4sLU9D/083de29c6366c3647732c962f377aa15/CTCT_Logo_H_White_RGB.svg" border="0" height="75" width="280" alt=""></a></div>
-</div>
-<div align="center" class="BottomBar">
-  <div><a style="color:#AFB5BB;" href="https://www.constantcontact.com/legal/terms">Terms &amp; Conditions</a>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;<a style="color:#AFB5BB;" href="https://www.constantcontact.com/legal/privacy-statement">Privacy Statement</a>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;<a style="color:#AFB5BB;" href="https://www.constantcontact.com/legal/california-privacy-rights">California Privacy Rights</a>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;<a style="color:#AFB5BB;" href="https://www.constantcontact.com/legal/security">Security</a>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;<a style="color:#AFB5BB;" href="https://www.constantcontact.com/legal/anti-spam">Anti-Spam</a>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;© Constant Contact, Inc. 1996-2020</div>
-</div>
-<style>
-.wForm .wfPagingButtons, .wForm .actions { font size: 50. em; width: 100% !important; text-align: center; text-size: 2.0em;
-  }  
-.TopBar {
-    padding: 15px 15px 15px 15px ;
-    position:fixed;
-    top:0px;
-    left:0px;
-    width:100%;important!;
-    text-align:cen
-    margin:10px !imter;
-    z-index:4;
-}
-.TopBarInner {
-    width:100%;
-    height: 75px;
-    padding: 0px 40px !important;
-    display:inline-block;
-    text-align:left;
-    background: #1856eb
-}
-/*Footer*/
-.BottomBar {
-    padding: 15px 15px 15px 15px !important;
-    background-color:#0B1450;
-    position:fixed;
-    height: 2vh;
-    bottom:0px;
-    z-index:4;
-    color:#AFB5BB;
-    width:100%;
-    margin:0px !important;
-    left:0px;
-    font-size:15px;
-    font-family: $font-main-font;
-}
-</style>
-<div align="left" class="TopBar">
-  <div class="TopBarInner"><a href="https://www.constantcontact.com"><img class="Logo" src="https://images.ctfassets.net/t21gix3kzulv/391zRXYpuZ902MDK4sLU9D/083de29c6366c3647732c962f377aa15/CTCT_Logo_H_White_RGB.svg" border="0" height="75" width="280" alt=""></a></div>
-</div>
-<div align="center" class="BottomBar">
-  <div><a style="color:#AFB5BB;" href="https://www.constantcontact.com/legal/terms">Terms &amp; Conditions</a>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;<a style="color:#AFB5BB;" href="https://www.constantcontact.com/legal/privacy-statement">Privacy Statement</a>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;<a style="color:#AFB5BB;" href="https://www.constantcontact.com/legal/california-privacy-rights">California Privacy Rights</a>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;<a style="color:#AFB5BB;" href="https://www.constantcontact.com/legal/security">Security</a>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;<a style="color:#AFB5BB;" href="https://www.constantcontact.com/legal/anti-spam">Anti-Spam</a>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;© Constant Contact, Inc. 1996-2020</div>
-</div></div>
-<h3 class="wFormTitle" data-testid="form-title" id="288-T"> </h3>
-<form method="post" action="https://constantcontact.tfaforms.net/api_v2/workflow/processor" class="hintsBelow labelsAbove" id="288" role="form">
-<div class="htmlSection" id="tfa_312"><div class="htmlContent" id="tfa_312-HTML"><div style="text-align: center; font-size: 27px; color: rgb(24, 86, 235);"><b>Find a speaker for your next event</b></div><div style="text-align: center; font-size: 18px; color: rgb(24, 86, 235);"><span style="font-weight: 700; font-size: 18px;">Connect to our wide network of Constant Contact Partners</span></div></div></div>
-<div id="tfa_299" class="section group">
-<div class="htmlSection" id="tfa_450"><div class="htmlContent" id="tfa_450-HTML"><div style="text-align: left; font-size: 15px; font-weight: 500;"><strong>Planning a marketing event for your organization or association?</strong> We can help! Constant Contact's network of partners - experienced in delivering keynotes, moderating panels, conducting training sessions and more- are available for events of all sizes and are eager to help deliver the email marketing content your organization is looking for.&nbsp;</div><div style="text-align: left; font-size: 15px; font-weight: 500;"><br></div><div style="text-align: left; font-size: 15px; font-weight: 500;">To request a speaker for your event, simply fill out the form below. We'll do our best to find a partner who can speak at your event as quickly as possible. If we can't find a speaker in your area, we have partners who offer webinars as an alternative.</div></div></div>
-<div id="tfa_547" class="section inline group">
-<div class="oneField field-container-D  labelsAbove  " id="tfa_29-D">
-<label id="tfa_29-L" class="label preField reqMark" for="tfa_29"><b>First Name:</b></label><br><div class="inputWrapper"><input aria-required="true" type="text" id="tfa_29" name="tfa_29" value="" maxlength="30" title="First Name:" class="required"></div>
-</div>
-<div class="oneField field-container-D  labelsAbove  " id="tfa_468-D">
-<label id="tfa_468-L" class="label preField reqMark" for="tfa_468"><b>Last Name:</b></label><br><div class="inputWrapper"><input aria-required="true" type="text" id="tfa_468" name="tfa_468" value="" maxlength="30" title="Last Name:" class="required"></div>
-</div>
-</div>
-<div id="tfa_546" class="section inline group">
-<div class="oneField field-container-D  labelsAbove  " id="tfa_472-D">
-<label id="tfa_472-L" class="label preField reqMark" for="tfa_472"><b>Affiliation:</b></label><br><div class="inputWrapper"><select aria-required="true" id="tfa_472" name="tfa_472" title="Affiliation:" class="required"><option value="">Please select...</option>
-<option value="tfa_473" id="tfa_473" class="">Chamber</option>
-<option value="tfa_474" id="tfa_474" class="">SBDC</option>
-<option value="tfa_475" id="tfa_475" class="">SCORE</option>
-<option value="tfa_476" id="tfa_476" class="">United Way</option>
-<option value="tfa_503" id="tfa_503" class="">Association</option>
-<option value="tfa_477" id="tfa_477" class="">Other</option></select></div>
-</div>
-<div class="oneField field-container-D  labelsAbove  " id="tfa_289-D">
-<label id="tfa_289-L" class="label preField reqMark" for="tfa_289"><b>Organization Name:</b></label><br><div class="inputWrapper"><input aria-required="true" type="text" id="tfa_289" name="tfa_289" value="" title="Organization Name:" class="required"></div>
-</div>
-</div>
-<div id="tfa_548" class="section inline group">
-<div class="oneField field-container-D  labelsAbove  " id="tfa_291-D">
-<label id="tfa_291-L" class="label preField reqMark" for="tfa_291"><b>Phone:</b></label><br><div class="inputWrapper"><input aria-required="true" type="text" id="tfa_291" name="tfa_291" value="" title="Phone:" class="required"></div>
-</div>
-<div class="oneField field-container-D  labelsAbove  " id="tfa_455-D">
-<label id="tfa_455-L" class="label preField reqMark" for="tfa_455"><b>Email Address:</b></label><br><div class="inputWrapper"><input aria-required="true" type="text" id="tfa_455" name="tfa_455" value="" title="Email Address:" class="required"></div>
-</div>
-</div>
-<div class="htmlSection" id="tfa_493"><div class="htmlContent" id="tfa_493-HTML"><div style="margin-top:16px"><b>Workshop Location</b></div></div></div>
-<div id="tfa_549" class="section inline group">
-<div class="oneField field-container-D  labelsAbove  " id="tfa_453-D">
-<label id="tfa_453-L" class="label preField reqMark" for="tfa_453">Address:</label><br><div class="inputWrapper"><input aria-required="true" type="text" id="tfa_453" name="tfa_453" value="" title="Address:" class="required"></div>
-</div>
-<div class="oneField field-container-D  labelsAbove  " id="tfa_497-D">
-<label id="tfa_497-L" class="label preField reqMark" for="tfa_497">City:</label><br><div class="inputWrapper"><input aria-required="true" type="text" id="tfa_497" name="tfa_497" value="" title="City:" class="required"></div>
-</div>
-</div>
-<div id="tfa_498" class="section inline group">
-<div class="oneField field-container-D  labelsAbove  " id="tfa_495-D">
-<label id="tfa_495-L" class="label preField reqMark" for="tfa_495">State:</label><br><div class="inputWrapper"><input aria-required="true" type="text" id="tfa_495" name="tfa_495" value="" maxlength="2" title="State:" class="required"></div>
-</div>
-<div class="oneField field-container-D  labelsAbove  " id="tfa_500-D">
-<label id="tfa_500-L" class="label preField reqMark" for="tfa_500">Zip:</label><br><div class="inputWrapper"><input aria-required="true" type="text" id="tfa_500" name="tfa_500" value="" title="Zip:" class="required"></div>
-</div>
-</div>
-<div class="oneField field-container-D   hintsBelow " id="tfa_510-D">
-<label id="tfa_510-L" class="label preField reqMark" for="tfa_510">Country</label><br><div class="inputWrapper">
-<input aria-required="true" type="text" id="tfa_510" name="tfa_510" value="" aria-describedby="tfa_510-HH" title="Country" class="required"><span class="field-hint-inactive" id="tfa_510-H"><span id="tfa_510-HH" class="hint">At this time, we are unable to accommodate in-person seminars outside of the US. Our partners can conduct a webinar for you</span></span>
-</div>
-</div>
-<div id="tfa_550" class="section inline group">
-<div class="oneField field-container-D    " id="tfa_456-D">
-<label id="tfa_456-L" class="label preField reqMark" for="tfa_456"><b>What workshop topic would you like?</b></label><br><div class="inputWrapper"><select aria-required="true" id="tfa_456" name="tfa_456" title="What workshop topic would you like?" class="required"><option value="">Please select...</option>
-<option value="tfa_538" id="tfa_538" class="">Email Marketing Trends</option>
-<option value="tfa_539" id="tfa_539" class="">Social Media</option>
-<option value="tfa_540" id="tfa_540" class="">Automation</option>
-<option value="tfa_541" id="tfa_541" class="">Growing Your List</option>
-<option value="tfa_542" id="tfa_542" class="">Email Marketing Quickstart</option>
-<option value="tfa_543" id="tfa_543" class="">Content</option>
-<option value="tfa_544" id="tfa_544" class="">Online Marketing General</option></select></div>
-</div>
-<div class="oneField field-container-D    " id="tfa_458-D">
-<label id="tfa_458-L" class="label preField reqMark" for="tfa_458"><b>What is the date of your event?</b></label><br><div class="inputWrapper"><input aria-required="true" type="text" id="tfa_458" name="tfa_458" value="" autocomplete="off" title="What is the date of your event?" class="validate-datecal required"></div>
-</div>
-<div class="oneField field-container-D    " id="tfa_516-D">
-<label id="tfa_516-L" class="label preField reqMark" for="tfa_516"><b>Is your event date negotiable?</b></label><br><div class="inputWrapper"><select aria-required="true" id="tfa_516" name="tfa_516" title="Is your event date negotiable?" class="required"><option value="">Please select...</option>
-<option value="tfa_517" id="tfa_517" class="">Yes</option>
-<option value="tfa_518" id="tfa_518" class="">No</option></select></div>
-</div>
-<div class="oneField field-container-D    " id="tfa_460-D">
-<label id="tfa_460-L" class="label preField reqMark" for="tfa_460"><b>How many attendees should we plan for</b><b>? </b>(Please estimate)</label><br><div class="inputWrapper"><input aria-required="true" type="text" id="tfa_460" name="tfa_460" value="" title="How many attendees should we plan for? (Please estimate)" class="validate-integer required"></div>
-</div>
-</div>
-<div id="tfa_551" class="section inline group">
-<div class="oneField field-container-D  labelsAbove  " id="tfa_466-D">
-<label id="tfa_466-L" class="label preField reqMark" for="tfa_466"><b>How long will the speaker have to present? </b>Our workshops are typically 1.5-2 hours long. However, we can work with a shorter time frame<b>.</b></label><br><div class="inputWrapper"><select aria-required="true" id="tfa_466" name="tfa_466" title="How long will the speaker have to present? Our workshops are typically 1.5-2 hours long. However, we can work with a shorter time frame." class="required"><option value="">Please select...</option>
-<option value="tfa_522" id="tfa_522" class="">Less than an hour</option>
-<option value="tfa_523" id="tfa_523" class="">1 to 2 hours</option>
-<option value="tfa_524" id="tfa_524" class="">More than 2 hours</option></select></div>
-</div>
-<div class="oneField field-container-D    " id="tfa_526-D">
-<label id="tfa_526-L" class="label preField reqMark" for="tfa_526"><span style="font-weight: 700;">How did you hear about this form?&nbsp;</span></label><br><div class="inputWrapper"><select aria-required="true" id="tfa_526" name="tfa_526" title="How did you hear about this form? " class="required"><option value="">Please select...</option>
-<option value="tfa_527" id="tfa_527" class="">Facebook</option>
-<option value="tfa_528" id="tfa_528" class="">Twitter</option>
-<option value="tfa_529" id="tfa_529" class="">LinkedIn</option>
-<option value="tfa_530" id="tfa_530" class="">Local Marketing Events Newsletter</option>
-<option value="tfa_531" id="tfa_531" class="">Chamber of Commerce Newsletter</option>
-<option value="tfa_532" id="tfa_532" class="">SCORE Newsletter</option>
-<option value="tfa_533" id="tfa_533" class="">SBDC Newsletter </option>
-<option value="tfa_534" id="tfa_534" class="">Associations Newsletter</option>
-<option value="tfa_535" id="tfa_535" class="">Constant Contact Blog</option>
-<option value="tfa_537" id="tfa_537" class="">Other</option></select></div>
-</div>
-</div>
-<div class="htmlSection" id="tfa_463"><div class="htmlContent" id="tfa_463-HTML"><div style="margin-top:14px">If you have any specific questions before submitting the form, please email <a target="_blank" href="mailto:speaker-request@constantcontact.com">speaker-request@constantcontact.com</a> and we will reply as soon as possible.&nbsp;</div></div></div>
-<div class="oneField field-container-D    " id="tfa_502-D">
-<label id="tfa_502-L" class="label preField " for="tfa_502"><b>Please include any additional comments we should know below:</b></label><br><div class="inputWrapper"><textarea id="tfa_502" name="tfa_502" title="Please include any additional comments we should know below:" class=""></textarea></div>
-</div>
-</div>
-<input type="hidden" id="tfa_525" name="tfa_525" value="" class=""><div class="oneField field-container-D    " id="tfa_552-D" role="group" aria-labelledby="tfa_552-L" data-tfa-labelledby="-L tfa_552-L"><div class="inputWrapper"><span id="tfa_552" class="choices vertical required"><span class="oneChoice"><input type="checkbox" value="tfa_553" class="" id="tfa_553" name="tfa_553" aria-labelledby="tfa_553-L" data-tfa-labelledby="tfa_552-L tfa_553-L" data-tfa-parent-id="tfa_552"><label class="label postField" id="tfa_553-L" for="tfa_553"><span class="input-checkbox-faux"></span>I acknowledge that these speakers are partners with Constant Contact. While these speakers will help your audience, they are small business owners and may require access to the attendee list and/or a fee.&nbsp; This is negotiable between you and your assigned speaker.</label></span></span></div></div>
-<div class="actions" id="288-A" data-contentid="submit_button">
-<div id="google-captcha" style="display: none">
-<br><div class="captcha">
-<div class="oneField">
-<div class="g-recaptcha" id="g-recaptcha-render-div"></div>
-<div class="g-captcha-error"></div>
-<br>
-</div>
-<div class="captchaHelp">reCAPTCHA helps prevent automated form spam.<br>
-</div>
-<div id="disabled-explanation" class="captchaHelp" style="display: none">The submit button will be disabled until you complete the CAPTCHA.</div>
-</div>
-</div>
-<input type="submit" data-label="Submit" class="primaryAction" id="submit_button" value="Submit">
-</div>
-<div style="clear:both"></div>
-<input type="hidden" value="572-a54f38a3f2d3dec8d8f18fef8b962b38" name="tfa_dbCounters" id="tfa_dbCounters" autocomplete="off"><input type="hidden" value="288" name="tfa_dbFormId" id="tfa_dbFormId"><input type="hidden" value="" name="tfa_dbResponseId" id="tfa_dbResponseId"><input type="hidden" value="3c60df62c8fa13e96c564d29676e8540" name="tfa_dbControl" id="tfa_dbControl"><input type="hidden" value="" name="tfa_dbWorkflowSessionUuid" id="tfa_dbWorkflowSessionUuid"><input type="hidden" value="1693642719" name="tfa_dbTimeStarted" id="tfa_dbTimeStarted" autocomplete="off"><input type="hidden" value="40" name="tfa_dbVersionId" id="tfa_dbVersionId"><input type="hidden" value="" name="tfa_switchedoff" id="tfa_switchedoff">
-</form>
-</div></div><div class="wFormFooter"><p class="supportInfo"><a target="new" class="contactInfoLink" href="https://constantcontact.tfaforms.net/forms/help/288" data-testid="contact-info-link">Contact Information</a><br></p></div>
-  <p class="supportInfo" >
-      </p>
- </div>
-
-<script
-    id="open-telemetry-script"
-    type="text/javascript"
-    src="https://constantcontact.tfaforms.net/dist/open-telemetry/open-telemetry.3e6c1bedaa7fb4452dd0.js"
-    data-customer-id="263"
-    data-exporter-url="https://us-east-1-otel.formassembly.com/v1/traces"
-    data-exporter-console="0"
-></script>
+<div class="bg-indigo-50">
+    <header>
+        <nav class="bg-indigo-50 border-gray-200 px-4 lg:px-6 py-2.5">
+            <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
+                <a href="#" class="flex items-center"><span class="text-indigo-600 self-center text-xl font-semibold whitespace-nowrap">Secure Solutions</span></a>
+                <div class="flex items-center lg:order-2">
+                    <a href="#" class="text-gray-800 hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2">Log in</a><a href="#" class="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2">Sign up now</a
+                    ><button type="button" class="inline-flex items-center p-2 ml-1 text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200" aria-controls="mobile-menu-2" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path></svg><svg class="hidden w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                    </button>
+                </div>
+                <div class="hidden justify-between items-center w-full lg:flex lg:w-auto lg:order-1" id="mobile-menu-2">
+                    <ul class="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
+                        <li><a href="#" class="block py-2 pr-4 pl-3 hover:text-blue-800 text-black rounded lg:bg-transparent lg:p-0" aria-current="page">Product</a></li>
+                        <li><a href="#" class="block py-2 pr-4 pl-3 hover:text-blue-800 text-black rounded lg:bg-transparent lg:p-0" aria-current="page">Features</a></li>
+                        <li><a href="#" class="block py-2 pr-4 pl-3 hover:text-blue-800 text-black rounded lg:bg-transparent lg:p-0" aria-current="page">Pricing</a></li>
+                        <li><a href="#" class="block py-2 pr-4 pl-3 hover:text-blue-800 text-black rounded lg:bg-transparent lg:p-0" aria-current="page">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="relative isolate px-6 pt-14 lg:px-8">
+        <div class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80" aria-hidden="true"></div>
+        <div class="mx-auto max-w-2xl py-10 sm:py-48 lg:py-10">
+            <div class="text-center">
+                <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">Crime and Criminal Registration Management System</h1>
+                <p class="mt-6 text-lg leading-8 text-gray-600">Streamline your crime and criminal registration process with our comprehensive management system. Track and manage criminal records, investigations, and court proceedings efficiently.</p>
+                <div class="mt-10 flex items-center justify-center gap-x-6">
+                    <a href="#" class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Sign up now</a><a href="#" class="text-sm font-semibold leading-6 text-gray-900">Learn more<span aria-hidden="true">→</span></a>
+                </div>
+            </div>
+        </div>
     </div>
-
-        <script src='https://constantcontact.tfaforms.net/js/iframe_message_helper_internal.js?v=2'></script>
-
-</body>
-</html>
+</div>
+<div class="bg-indigo-600 py-10 sm:py-10">
+    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+        <div class="mx-auto max-w-2xl lg:text-center">
+            <h2 class="text-base font-semibold leading-7 text-indigo-200">Streamline criminal justice</h2>
+            <p class="mt-2 text-3xl font-bold tracking-tight text-white sm:text-4xl">Efficiently manage crime and criminal records</p>
+            <p class="mt-6 text-lg leading-8 text-indigo-200">Feature section description</p>
+        </div>
+        <div class="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-none">
+            <dl class="grid max-w-xl grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-3">
+                <div class="flex flex-col">
+                    <dt class="flex items-center gap-x-3 text-base font-semibold leading-7 text-white">Case Management</dt>
+                    <dd class="mt-4 flex flex-auto flex-col text-base leading-7 text-indigo-200">
+                        <p class="flex-auto">Efficiently manage and track criminal cases</p>
+                        <p class="mt-6">
+                            <a href="#" class="text-sm font-semibold leading-6 text-white">Learn more <span aria-hidden="true">→</span></a>
+                        </p>
+                    </dd>
+                </div>
+                <div class="flex flex-col">
+                    <dt class="flex items-center gap-x-3 text-base font-semibold leading-7 text-white">Criminal Record Search</dt>
+                    <dd class="mt-4 flex flex-auto flex-col text-base leading-7 text-indigo-200">
+                        <p class="flex-auto">Easily search and retrieve criminal records</p>
+                        <p class="mt-6">
+                            <a href="#" class="text-sm font-semibold leading-6 text-white">Learn more <span aria-hidden="true">→</span></a>
+                        </p>
+                    </dd>
+                </div>
+                <div class="flex flex-col">
+                    <dt class="flex items-center gap-x-3 text-base font-semibold leading-7 text-white">Reporting and Analytics</dt>
+                    <dd class="mt-4 flex flex-auto flex-col text-base leading-7 text-indigo-200">
+                        <p class="flex-auto">Generate comprehensive reports and gain insights from data</p>
+                        <p class="mt-6">
+                            <a href="#" class="text-sm font-semibold leading-6 text-white">Learn more <span aria-hidden="true">→</span></a>
+                        </p>
+                    </dd>
+                </div>
+            </dl>
+        </div>
+    </div>
+</div>
+<div class="bg-white py-24 sm:py-32">
+    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+        <div class="mx-auto max-w-4xl sm:text-center">
+            <h2 class="text-base font-semibold leading-7 text-indigo-600">Choose the perfect plan for your needs</h2>
+            <p class="mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">Pricing</p>
+        </div>
+        <p class="mx-auto mt-6 max-w-2xl text-lg leading-8 text-gray-600 sm:text-center">Select from our flexible pricing plans to suit your requirements</p>
+        <div class="mt-20 flow-root">
+            <div class="isolate -mt-16 grid max-w-sm grid-cols-1 gap-y-16 divide-y divide-gray-100 sm:mx-auto lg:-mx-8 lg:mt-0 lg:max-w-none lg:grid-cols-3 lg:divide-x lg:divide-y-0 xl:-mx-4">
+                <div class="pt-16 lg:px-8 lg:pt-0 xl:px-14">
+                    <h3 class="text-base font-semibold leading-7 text-gray-900">Basic Plan</h3>
+                    <p class="mt-6 flex items-baseline gap-x-1">
+                        <span class="text-5xl font-bold tracking-tight text-gray-900">$10</span><span class="text-sm font-semibold leading-6 text-gray-600">/<!-- -->month</span>
+                    </p>
+                    <a href="#" class="mt-10 block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Get started</a>
+                    <p class="mt-10 text-sm font-semibold leading-6 text-gray-900">Ideal for small businesses</p>
+                    <ul role="list" class="mt-6 space-y-3 text-sm leading-6 text-gray-600">
+                        <li class="flex gap-x-3">
+                            <svg class="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>User-friendly interface
+                        </li>
+                        <li class="flex gap-x-3">
+                            <svg class="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Crime data management
+                        </li>
+                        <li class="flex gap-x-3">
+                            <svg class="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Criminal record search
+                        </li>
+                        <li class="flex gap-x-3">
+                            <svg class="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Reporting and analytics
+                        </li>
+                        <li class="flex gap-x-3">
+                            <svg class="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>24/7 customer support
+                        </li>
+                    </ul>
+                </div>
+                <div class="pt-16 lg:px-8 lg:pt-0 xl:px-14">
+                    <h3 class="text-base font-semibold leading-7 text-gray-900">Pro Plan</h3>
+                    <p class="mt-6 flex items-baseline gap-x-1">
+                        <span class="text-5xl font-bold tracking-tight text-gray-900">$20</span><span class="text-sm font-semibold leading-6 text-gray-600">/<!-- -->month</span>
+                    </p>
+                    <a href="#" class="mt-10 block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Get started</a>
+                    <p class="mt-10 text-sm font-semibold leading-6 text-gray-900">Perfect for medium-sized organizations</p>
+                    <ul role="list" class="mt-6 space-y-3 text-sm leading-6 text-gray-600">
+                        <li class="flex gap-x-3">
+                            <svg class="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Advanced search filters
+                        </li>
+                        <li class="flex gap-x-3">
+                            <svg class="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Incident tracking and alerts
+                        </li>
+                        <li class="flex gap-x-3">
+                            <svg class="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Integration with external systems
+                        </li>
+                        <li class="flex gap-x-3">
+                            <svg class="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Customizable dashboards
+                        </li>
+                        <li class="flex gap-x-3">
+                            <svg class="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Priority customer support
+                        </li>
+                    </ul>
+                </div>
+                <div class="pt-16 lg:px-8 lg:pt-0 xl:px-14">
+                    <h3 class="text-base font-semibold leading-7 text-gray-900">Advanced Plan</h3>
+                    <p class="mt-6 flex items-baseline gap-x-1">
+                        <span class="text-5xl font-bold tracking-tight text-gray-900">$30</span><span class="text-sm font-semibold leading-6 text-gray-600">/<!-- -->month</span>
+                    </p>
+                    <a href="#" class="mt-10 block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Get started</a>
+                    <p class="mt-10 text-sm font-semibold leading-6 text-gray-900">Designed for large enterprises</p>
+                    <ul role="list" class="mt-6 space-y-3 text-sm leading-6 text-gray-600">
+                        <li class="flex gap-x-3">
+                            <svg class="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Real-time crime mapping
+                        </li>
+                        <li class="flex gap-x-3">
+                            <svg class="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Predictive analytics
+                        </li>
+                        <li class="flex gap-x-3">
+                            <svg class="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Multi-user access and permissions
+                        </li>
+                        <li class="flex gap-x-3">
+                            <svg class="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Data encryption and security
+                        </li>
+                        <li class="flex gap-x-3">
+                            <svg class="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>Dedicated account manager
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="bg-indigo-600">
+    <div class="px-6 py-24 sm:px-6 sm:py-32 lg:px-8">
+        <div class="mx-auto max-w-2xl text-center">
+            <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl"><br />Streamline your criminal registration process</h2>
+            <p class="mx-auto mt-6 max-w-xl text-lg leading-8 text-indigo-200">Simplify the way you manage crime and criminal records with our comprehensive system. Save time, reduce errors, and enhance efficiency.</p>
+            <div class="mt-10 flex items-center justify-center gap-x-6">
+                <a href="#" class="rounded-md bg-white px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">Get a demo</a
+                ><a href="#" class="text-sm font-semibold leading-6 text-white"
+                    >Learn more<!-- -->
+                    <span aria-hidden="true">→</span></a
+                >
+            </div>
+        </div>
+    </div>
+</div>
+<div class="bg-white">
+    <div class="mx-auto max-w-7xl px-6 py-24 sm:pt-32 lg:px-8 lg:py-40">
+        <div class="lg:grid lg:grid-cols-12 lg:gap-8">
+            <div class="lg:col-span-5">
+                <h2 class="text-2xl font-bold leading-10 tracking-tight text-gray-900">Frequently asked questions</h2>
+                <p class="mt-4 text-base leading-7 text-gray-600">
+                    Can’t find the answer you’re looking for? Reach out to our<!-- -->
+                    <a href="#" class="font-semibold text-indigo-600 hover:text-indigo-500">customer support</a>
+                    <!-- -->team.
+                </p>
+            </div>
+            <div class="mt-10 lg:col-span-7 lg:mt-0">
+                <dl class="space-y-10">
+                    <div>
+                        <dt class="text-base font-semibold leading-7 text-gray-900">What is a crime and criminal registration management system?</dt>
+                        <dd class="mt-2 text-base leading-7 text-gray-600">A crime and criminal registration management system is a software application that helps law enforcement agencies and other organizations to manage and track information related to crimes and criminals.</dd>
+                    </div>
+                    <div>
+                        <dt class="text-base font-semibold leading-7 text-gray-900">What are the key features of a crime and criminal registration management system?</dt>
+                        <dd class="mt-2 text-base leading-7 text-gray-600">Some key features of a crime and criminal registration management system include case management, suspect tracking, evidence management, reporting and analytics, and integration with other law enforcement systems.</dd>
+                    </div>
+                    <div>
+                        <dt class="text-base font-semibold leading-7 text-gray-900">Who can use a crime and criminal registration management system?</dt>
+                        <dd class="mt-2 text-base leading-7 text-gray-600">A crime and criminal registration management system can be used by law enforcement agencies, police departments, detective agencies, and other organizations involved in crime investigation and criminal registration.</dd>
+                    </div>
+                    <div>
+                        <dt class="text-base font-semibold leading-7 text-gray-900">How does a crime and criminal registration management system improve efficiency?</dt>
+                        <dd class="mt-2 text-base leading-7 text-gray-600">By automating various tasks and providing a centralized database for storing and accessing crime-related information, a crime and criminal registration management system helps to streamline processes, reduce paperwork, and improve overall efficiency in managing crime and criminal records.</dd>
+                    </div>
+                    <div>
+                        <dt class="text-base font-semibold leading-7 text-gray-900">Is a crime and criminal registration management system secure?</dt>
+                        <dd class="mt-2 text-base leading-7 text-gray-600">Yes, a crime and criminal registration management system is designed with security measures to protect sensitive information. It may include user authentication, access control, data encryption, and other security features to ensure the confidentiality and integrity of the data.</dd>
+                    </div>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
